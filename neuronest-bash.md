@@ -164,6 +164,78 @@ Remove Duplicates: cut -d , -f 2 [file].csv | sort | uniq
 cut: Extracts specific columns from a file. Use -d to specify delimiter (default is TAB).
 
 
+## Understanding Permissions
+
+In Unix-like operating systems, permissions control who can read, modify, or execute files and directories. This is crucial for managing security and access on your system. The way permissions are handled in Unix is somewhat similar to Windows, but the specifics differ.
+
+### Basic Concepts
+
+- **Ownership**: Every file and directory has an owner and a group associated with it. The operating system tracks these using numeric IDs.
+- **Categories**: Each user falls into one of three categories for any file:
+  - **Owner**: The user who owns the file.
+  - **Group**: Users who are part of the file’s associated group.
+  - **Others**: Everyone else on the system.
+
+### Permission Types
+
+Permissions specify what actions users in each category can perform:
+
+- **Read (`r`)**: Allows viewing the contents of the file.
+- **Write (`w`)**: Allows modifying the file.
+- **Execute (`x`)**: Allows running the file if it is a program or script.
+
+### Viewing Permissions
+
+Use the `ls -l` command to view detailed file permissions. The output includes:
+
+- **File Type and Permissions**: A string like `-rwxr-xr-x` that shows permissions:
+  - The first character indicates the type (e.g., `-` for files, `d` for directories).
+  - The next three characters are the owner's permissions.
+  - The following three are the group's permissions.
+  - The last three are the permissions for others.
+
+For example, `-rwxr-xr-x` means:
+- **Owner**: Can read, write, and execute.
+- **Group**: Can read and execute, but not write.
+- **Others**: Can read and execute, but not write.
+
+### Changing Permissions
+
+To modify permissions, use the `chmod` command. Here are some common usages:
+
+- **Set Specific Permissions**:
+  ```bash
+  chmod u=rw final.grd
+  ```
+ This sets read and write permissions for the owner (u stands for user).
+- **Set Permissions for Group**:
+  ```bash
+  chmod g=r final.grd
+    ```
+  This grants read-only permissions to the group (g stands for group).
+- **Remove All Permissions"
+  ```bash
+  chmod a= final.grd
+  ```
+  This removes all permissions for everyone (a stands for all).
+  **Using Numerics**
+  ```bash
+  chmod 770 test.txt
+  ```
+  This gives read, write, and execute permissions to the owner and group, but no permissions to others.
+
+   - **Make a File Readable**: The chmod command is commonly used to make a file "executable", like this
+   ```bash
+    chmod +x myShellScript.sh
+    ```
+  - **Make a Script Executable**: The chmod command is commonly used to make a file "executable", like this
+   ```bash
+    chmod +x myShellScript.sh
+    ```
+   
+### Special Permissions for Directories
+
+
 
 
 ### MATLAB File Types:
