@@ -167,6 +167,7 @@ cut: Extracts specific columns from a file. Use -d to specify delimiter (default
 ## Understanding Permissions
 
 In Unix-like operating systems, permissions control who can read, modify, or execute files and directories. This is crucial for managing security and access on your system. The way permissions are handled in Unix is somewhat similar to Windows, but the specifics differ.
+In Unix-like systems, permissions can be set for the file's owner (`u`), the group associated with the file (`g`), and all other users (`o`). Below are various ways to modify these permissions using the `chmod` command.
 
 ### Basic Concepts
 
@@ -190,24 +191,130 @@ Use the `ls -l` command to view detailed file permissions. The output includes:
 
 - **File Type and Permissions**: A string like `-rwxr-xr-x` that shows permissions:
   - The first character indicates the type (e.g., `-` for files, `d` for directories).
-  - The next three characters are the owner's permissions.
-  - The following three are the group's permissions.
-  - The last three are the permissions for others.
+  - The next three characters are the owner's permissions (aka the "user").
+  - The following three are the permissions for the group the user belongs to.
+  - The last three are the permissions for all other users.
 
 For example, `-rwxr-xr-x` means:
 - **Owner**: Can read, write, and execute.
 - **Group**: Can read and execute, but not write.
 - **Others**: Can read and execute, but not write.
 
-### Changing Permissions
+See https://alvinalexander.com/linux-unix/linux-chmod-command-permissions-file-directories/ for more information and examples.
 
-To modify permissions, use the `chmod` command. Here are some common usages:
+## Changing Permissions
+### Grant Read Permission
+This command gives the file's owner read access. The resulting permissions would be `-r--------`.
+  ```bash
+  chmod u+r foo.txt
+  ```
 
+### Grant Write Permission
+This command adds write permission for the owner. The file's permissions will then be `--w-------`.
+```bash
+chmod u+w foo.txt
+```
+
+### Grant Execute Permission
+This command allows the owner to execute the file. The permissions would be updated to `---x------`.
+```bash
+chmod u+x foo.txt
+```
+
+### Grant Read, Write, and Execute Permissions
+This command provides full access (read, write, and execute) to the file's owner. The file permissions will be `-rwx------`.
+```bash
+chmod u+rwx foo.txt
+```
+
+### Applying Permissions to the Group and Others
+
+#### For the Group
+This grants the group read, write, and execute permissions, resulting in `----rwx---`.
+```bash
+chmod g+rwx foo.txt
+```
+
+#### For Others
+This command allows all other users to read, write, and execute the file, setting permissions to `-------rwx`.
+```bash
+chmod o+rwx foo.txt
+```
+
+### Combine Permission Changes
+This updates permissions to `-rwx-rw-r--`, providing different levels of access to the owner, group, and others.
+```bash
+chmod u+rwx,g+rw,o+r foo.txt
+```
+
+### Setting Exact Permissions
+
+To set permissions precisely, use the equal sign (`=`) to define permissions explicitly:
+
+This command configures permissions to `-rw-rw-r--`, ensuring read and write access for the owner and group, and read-only access for others.
+```bash
+chmod u=rw,g=rw,o=r foo.txt
+```
+### Using Numerical Permission Codes
+
+Numerical codes offer a compact way to set file permissions. Each digit represents permissions for the owner, group, and others, respectively:
+
+#### Read Permission Only
+chmod 400 foo.txt
+This sets permissions to `-r--------`, allowing only the owner to read the file.
+
+#### Read Permission for Owner and Group
+chmod 440 foo.txt
+This results in `-r--r-----`, enabling read access for both the owner and the group.
+
+#### Read Permission for Everyone
+chmod 444 foo.txt
+This configuration, `-r--r--r--`, allows all users to read the file. Here, the number `4` signifies read permission.
+
+#### Read and Write Permissions
+chmod 664 foo.txt
+This sets permissions to `-rw-rw-r--`, giving both the owner and the group read and write access.
+
+#### Read, Write, and Execute Permissions
+chmod 774 foo.txt
+This sets permissions to `-rwxrwxr--`, allowing full access for the owner and group.
+
+#### Full Access for Owner Only
+chmod 700 foo.txt
+This grants full permissions to the owner (`-rwx------`) and none to others.
+
+#### Typical Permissions for Directories
+chmod 755 MyDir
+For directories, `755` results in `drwxr-xr-x`, providing read, write, and execute access to the owner, and read and execute access to the group and others.
+
+
+
+
+
+-----
+To modify permissions, use the `chmod` command, which stands for "change mode". Here are some common usages:
+ - **Make Scripts Executable**:
+    - For all users
+       ```bash
+        chmod +x myShellScript.sh
+        ```
+
+- **Make Files Readable**: To add read permissions for all users, run:
+   ```bash
+    chmod +r file.txt
+   ```
+
+- **Make Files Writeable**: You can also give write permissions to all users, like this:
+   ```bash
+    chmod +w file.txt
+   ```
+  
 - **Set Specific Permissions**:
   ```bash
   chmod u=rw final.grd
   ```
  This sets read and write permissions for the owner (u stands for user).
+ 
 - **Set Permissions for Group**:
   ```bash
   chmod g=r final.grd
@@ -218,6 +325,7 @@ To modify permissions, use the `chmod` command. Here are some common usages:
   chmod a= final.grd
   ```
   This removes all permissions for everyone (a stands for all).
+  
   **Using Numerics**
   ```bash
   chmod 770 test.txt
@@ -228,10 +336,7 @@ To modify permissions, use the `chmod` command. Here are some common usages:
    ```bash
     chmod +x myShellScript.sh
     ```
-  - **Make a Script Executable**: The chmod command is commonly used to make a file "executable", like this
-   ```bash
-    chmod +x myShellScript.sh
-    ```
+ 
    
 ### Special Permissions for Directories
 
